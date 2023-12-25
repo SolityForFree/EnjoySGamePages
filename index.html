@@ -14,7 +14,7 @@
                 <div id="selectingNameDiv">
                     <h1> What is your name?</h1>
                     <input type="text" id="fname" name="fname"><br><br>
-                    <button onclick="SetNameButton()">Let's play!</button>
+                    <button onclick="SetNameButton()">Host Game</button>
                 </div>
 
                 <div id="gameDiv" style="display: none;">
@@ -28,7 +28,7 @@
     </div>
     <script src="index.js"></script>
     <script>
-        var engine = new Engine({"args":[],"canvasResizePolicy":1,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":66774336,"index.wasm":17867504},"focusCanvas":true,"gdnativeLibs":[]});
+        var engine = new Engine({"args":[],"canvasResizePolicy":1,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":66784432,"index.wasm":17867504},"focusCanvas":true,"gdnativeLibs":[]});
         var player_name = "nothing123"
         
         function printProgress(current, total) {
@@ -38,7 +38,7 @@
         function SetNameButton()
         {
             player_name = document.getElementById("fname").value;
-        
+
             engine.startGame({ onProgress: printProgress });
 
             ShowGameHideNameSelect()
