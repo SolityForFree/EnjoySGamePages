@@ -10,11 +10,19 @@
     <div class="container-fluid vh-100 d-flex justify-content-center align-items-center">
         <div class="row">
             <div class="col-md-6">
+                <div id="createServer">
+                <h1> Welcome to the Botanica Erotica!</h1>
+                <br>
+                    <button onclick="CreateServer()"><h1>Start Game</h1></button>
+                </div>
                 
                 <div id="selectingNameDiv">
+                    <h1>Send this ur to your friend, partner or lover ❤️</h1>
+                    <h2 id="urlToShare">...</h2>
+                    <br>
                     <h1> What is your name?</h1>
                     <input type="text" id="fname" name="fname"><br><br>
-                    <button onclick="SetNameButton()">Host Game</button>
+                    <button onclick="SetNameButton()">Set name</button>
                 </div>
 
                 <div id="gameDiv" style="display: none;">
@@ -28,9 +36,27 @@
     </div>
     <script src="index.js"></script>
     <script>
-        var engine = new Engine({"args":[],"canvasResizePolicy":1,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":66784432,"index.wasm":17867504},"focusCanvas":true,"gdnativeLibs":[]});
+        var engine = new Engine({"args":[],"canvasResizePolicy":1,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":66793792,"index.wasm":17867504},"focusCanvas":true,"gdnativeLibs":[]});
         var player_name = "nothing123"
         
+            
+        document.getElementById("selectingNameDiv").style.display = "none";
+        var search_params = new URLSearchParams(window.location.search)
+        if (search_params.has("networkGame") && search_params.has("networkGameId"))
+        {
+            document.getElementById("createServer").style.display = "none";
+            document.getElementById("selectingNameDiv").style.display = "block";
+
+            document.getElementById("urlToShare").innerHTML = window.location.href;
+
+        }
+
+        function CreateServer()
+        {
+            let networkGameId = (Math.random() + 1).toString(36).substring(3);
+            window.location = location.protocol + "//" + location.hostname + window.location.pathname + "?networkGame=true&networkGameId=" + networkGameId
+        }
+
         function printProgress(current, total) {
             document.getElementById("progress").innerHTML = ((current/total) * 100).toFixed(2);   
         }
