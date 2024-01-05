@@ -3,7 +3,7 @@
     "short_name": "ESG",
     "theme_color": "#ffcbe4",
     "background_color": "#fa99ca",
-    "display": "standalone",
+    "display": "fullscreen",
     "scope": "/",
     "start_url": "https://solityforfree.github.io/EnjoySGamePages/",
     "description": "Blog and Resume for Christine Dodrill",
