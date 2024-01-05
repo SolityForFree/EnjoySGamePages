@@ -16,7 +16,9 @@
                 <h1>Welcome to Botanica Erotica!</h1>
                 <br>
                 <button class="btn btn-primary btn-lg" onclick="CreateServer()">Start Game</button>
-                <button id="install" hidden>Install</button>    
+                <button class="btn btn-primary btn-lg" id="install" hidden>Install</button>    
+
+                <input type="file" accept="image/x-png,image/jpeg,image/gif"  onChange="upload()"/>
             </div>
 
             <div id="selectingNameDiv" style="display: none;">
@@ -28,11 +30,11 @@
             </div>
 
             <div id="gameDiv" style="display: none;">
-                <div class="mb-2">
-                    <h1>Share URL with your friend, partner, lover ❤️</h1>
-                    <button class="btn btn-secondary" onclick="copyURLToClipboard()">Copy URL</button>
-                    <button class="btn btn-secondary" onclick="toggleFullScreen()">Full Screen</button>
-                </div> 
+                <!-- <div class="mb-2"> -->
+                    <!-- <h1>Share URL with your friend, partner, lover ❤️</h1> -->
+                    <!-- <button class="btn btn-secondary" onclick="copyURLToClipboard()">Copy URL</button> -->
+                    <!-- <button class="btn btn-secondary" onclick="toggleFullScreen()">Full Screen</button> -->
+                <!-- </div>  -->
                 <canvas id="canvas"></canvas>
                 <div id="progress">
                 <h1>Game is loading:</h1>
@@ -136,7 +138,25 @@
             installPrompt = null;
             installButton.setAttribute("hidden", "");
         }
+
+        function upload() 
+        {
         
+        return new Promise(async (resolve, reject) => {
+            const filePicker = document.querySelector('input');
+
+            if (!filePicker || !filePicker.files 
+                || filePicker.files.length <= 0) {
+                reject('No file selected.');
+            return;
+        }
+        const myFile = filePicker.files[0];
+        console.log(myFile);
+
+        resolve();
+        });
+    
+    }
     </script>
 </body>
 </html>
