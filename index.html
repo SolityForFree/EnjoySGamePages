@@ -19,6 +19,8 @@
                 <button class="btn btn-primary btn-lg" id="install" hidden>Install</button>    
 
                 <input type="file" accept="image/x-png,image/jpeg,image/gif"  onChange="upload()"/>
+                <div style="width: 500px" id="reader"></div>
+
             </div>
 
             <div id="selectingNameDiv" style="display: none;">
@@ -30,11 +32,11 @@
             </div>
 
             <div id="gameDiv" style="display: none;">
-                <!-- <div class="mb-2"> -->
-                    <!-- <h1>Share URL with your friend, partner, lover ❤️</h1> -->
-                    <!-- <button class="btn btn-secondary" onclick="copyURLToClipboard()">Copy URL</button> -->
-                    <!-- <button class="btn btn-secondary" onclick="toggleFullScreen()">Full Screen</button> -->
-                <!-- </div>  -->
+                <div class="mb-2">
+                    <h1>Share URL with your friend, partner, lover ❤️</h1>
+                    <button class="btn btn-secondary" onclick="copyURLToClipboard()">Copy URL</button>
+                    <button class="btn btn-secondary" onclick="toggleFullScreen()">Full Screen</button>
+                </div> 
                 <canvas id="canvas"></canvas>
                 <div id="progress">
                 <h1>Game is loading:</h1>
@@ -50,8 +52,9 @@
 </main>
     <script src="index.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="html5-qrcode.min.js"></script>
     <script>
-        var engine = new Engine({"args":[],"canvasResizePolicy":1,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":68200544,"index.wasm":17867504},"focusCanvas":true,"gdnativeLibs":[]});
+        var engine = new Engine({"args":[],"canvasResizePolicy":1,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":68200496,"index.wasm":17867504},"focusCanvas":true,"gdnativeLibs":[]});
         var player_name = "nothing123"
         
             
@@ -61,6 +64,12 @@
         {
             document.getElementById("createServer").style.display = "none";
             document.getElementById("selectingNameDiv").style.display = "block";
+            document.getElementById("reader").style.display = "none";
+        }
+        else{
+            var html5QrcodeScanner = new Html5QrcodeScanner(
+	"reader", { fps: 10, qrbox: 250 });
+html5QrcodeScanner.render(onScanSuccess);
         }
 
         function CreateServer()
@@ -148,15 +157,24 @@
             if (!filePicker || !filePicker.files 
                 || filePicker.files.length <= 0) {
                 reject('No file selected.');
-            return;
-        }
+                return;
+            }
         const myFile = filePicker.files[0];
-        console.log(myFile);
-
+        console.log(myFile.result);
         resolve();
         });
     
-    }
+        }
+
+        function onScanSuccess(decodedText, decodedResult) {
+            // Handle on success condition with the decoded text or result.
+            console.log(`Scan result: ${decodedText}`, decodedResult);
+            window.location = location.protocol + "//" + location.hostname + window.location.pathname + "?networkGame=true&networkGameId=" + decodedText
+        } 
+
+
+
+
     </script>
 </body>
 </html>
