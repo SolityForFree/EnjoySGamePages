@@ -14,7 +14,7 @@
         <div class="col-md-6 text-center">
             <div id="createServer">
                 <h1>Welcome to Botanica Erotica!</h1>
-                <h3> hoj. Vítej na testovací stránce pro Botanica Erotica (název je VIP). Byl jsi vybrán, protože jsi otevřený člověk
+                <h3 id="textPopis"> hoj. Vítej na testovací stránce pro Botanica Erotica (název je VIP). Byl jsi vybrán, protože jsi otevřený člověk
                     který chápe, že je potřeba se o sexu a sexuálních praktikách bavit mezi partnery.
                     Veškerá pravidla pro tuto testovací verzi najdete v tomto videu:
                 </h3>
@@ -176,6 +176,8 @@
 
             let startButton = document.getElementById("startServer")
             startButton.setAttribute("hidden", true)
+            let textPopis = document.getElementById("textPopis")
+            textPopis.setAttribute("hidden", true)
         }
     </script>
 </body>
