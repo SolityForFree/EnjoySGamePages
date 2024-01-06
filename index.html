@@ -14,9 +14,12 @@
         <div class="col-md-6 text-center">
             <div id="createServer">
                 <h1>Welcome to Botanica Erotica!</h1>
+                <h3> hoj. Vítej na testovací stránce pro Botanica Erotica (název je VIP). Byl jsi vybrán, protože jsi otevřený člověk
+                    který chápe, že je potřeba se o sexu a sexuálních praktikách bavit mezi partnery.
+                    Veškerá pravidla pro tuto testovací verzi najdete v tomto videu:
+                </h3>
                 <br>
-                <button class="btn btn-primary btn-lg" onclick="CreateServer()" id="startServer">Start Server</button>
-                <br>
+                <button class="btn btn-primary btn-lg mb-3" onclick="CreateServer()" id="startServer">Start Server</button>
                 <button class="btn btn-primary btn-lg" onclick="JoinGame()" id="joinGame">Join Game</button>
                 <button class="btn btn-primary btn-lg" id="install" hidden>Install</button>    
                 <div style="width: 500px" id="reader" hidden></div>
@@ -31,11 +34,11 @@
             </div>
 
             <div id="gameDiv" style="display: none;">
-                <div class="mb-2">
-                    <h1>Share URL with your friend, partner, lover ❤️</h1>
-                    <button class="btn btn-secondary" onclick="copyURLToClipboard()">Copy URL</button>
-                    <button class="btn btn-secondary" onclick="toggleFullScreen()">Full Screen</button>
-                </div> 
+                <!-- <div class="mb-2"> -->
+                    <!-- <h1>Share URL with your friend, partner, lover ❤️</h1> -->
+                    <!-- <button class="btn btn-secondary" onclick="copyURLToClipboard()">Copy URL</button> -->
+                    <!-- <button class="btn btn-secondary" onclick="toggleFullScreen()">Full Screen</button> -->
+                <!-- </div>  -->
                 <canvas id="canvas"></canvas>
                 <div id="progress">
                 <h1>Game is loading:</h1>
