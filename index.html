@@ -15,12 +15,11 @@
             <div id="createServer">
                 <h1>Welcome to Botanica Erotica!</h1>
                 <br>
-                <button class="btn btn-primary btn-lg" onclick="CreateServer()">Start Game</button>
+                <button class="btn btn-primary btn-lg" onclick="CreateServer()" id="startServer">Start Server</button>
+                <br>
+                <button class="btn btn-primary btn-lg" onclick="JoinGame()" id="joinGame">Join Game</button>
                 <button class="btn btn-primary btn-lg" id="install" hidden>Install</button>    
-
-                <input type="file" accept="image/x-png,image/jpeg,image/gif"  onChange="upload()"/>
-                <div style="width: 500px" id="reader"></div>
-
+                <div style="width: 500px" id="reader" hidden></div>
             </div>
 
             <div id="selectingNameDiv" style="display: none;">
@@ -67,9 +66,12 @@
             document.getElementById("reader").style.display = "none";
         }
         else{
-            var html5QrcodeScanner = new Html5QrcodeScanner(
-	"reader", { fps: 10, qrbox: 250 });
-html5QrcodeScanner.render(onScanSuccess);
+            //var html5QrcodeScanner = new Html5QrcodeScanner(
+	        //    "reader", { fps: 10, qrbox: 250 });
+            //html5QrcodeScanner.render(onScanSuccess);
+            const html5QrCode = new Html5Qrcode("reader");
+            const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+            html5QrCode.start({ facingMode: "environment" }, config, onScanSuccess);
         }
 
         function CreateServer()
@@ -148,23 +150,7 @@ html5QrcodeScanner.render(onScanSuccess);
             installButton.setAttribute("hidden", "");
         }
 
-        function upload() 
-        {
-        
-        return new Promise(async (resolve, reject) => {
-            const filePicker = document.querySelector('input');
 
-            if (!filePicker || !filePicker.files 
-                || filePicker.files.length <= 0) {
-                reject('No file selected.');
-                return;
-            }
-        const myFile = filePicker.files[0];
-        console.log(myFile.result);
-        resolve();
-        });
-    
-        }
 
         function onScanSuccess(decodedText, decodedResult) {
             // Handle on success condition with the decoded text or result.
@@ -172,9 +158,17 @@ html5QrcodeScanner.render(onScanSuccess);
             window.location = location.protocol + "//" + location.hostname + window.location.pathname + "?networkGame=true&networkGameId=" + decodedText
         } 
 
+        function JoinGame()
+        {
+            let reader = document.getElementById("reader")
+            reader.removeAttribute("hidden");
+            
+            let joinButton = document.getElementById("joinGame")
+            joinButton.setAttribute("hidden", true)
 
-
-
+            let startButton = document.getElementById("startServer")
+            startButton.setAttribute("hidden", true)
+        }
     </script>
 </body>
 </html>
