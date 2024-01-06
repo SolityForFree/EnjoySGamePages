@@ -69,9 +69,9 @@
             //var html5QrcodeScanner = new Html5QrcodeScanner(
 	        //    "reader", { fps: 10, qrbox: 250 });
             //html5QrcodeScanner.render(onScanSuccess);
-            const html5QrCode = new Html5Qrcode("reader");
-            const config = { fps: 10, qrbox: { width: 250, height: 250 } };
-            html5QrCode.start({ facingMode: "environment" }, config, onScanSuccess);
+            // const html5QrCode = new Html5Qrcode("reader");
+            // const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+            // html5QrCode.start({ facingMode: "environment" }, config, onScanSuccess);
         }
 
         function CreateServer()
@@ -160,9 +160,14 @@
 
         function JoinGame()
         {
+            console.log("Hello")
             let reader = document.getElementById("reader")
             reader.removeAttribute("hidden");
             
+            const html5QrCode = new Html5Qrcode("reader");
+            const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+            html5QrCode.start({ facingMode: "environment" }, config, onScanSuccess);
+
             let joinButton = document.getElementById("joinGame")
             joinButton.setAttribute("hidden", true)
 
