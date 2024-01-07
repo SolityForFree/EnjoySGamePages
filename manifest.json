@@ -7,7 +7,7 @@
     "scope": "/",
     "start_url": "https://solityforfree.github.io/EnjoySGamePages/",
     "description": "Blog and Resume for Christine Dodrill",
-    "orientation": "any",
+    "orientation": "portrait",
     "url_handlers": [
         {
           "origin": "https://solityforfree.github.io/"
