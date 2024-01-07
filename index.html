@@ -99,7 +99,10 @@
         function SetNameButton()
         {
             player_name = document.getElementById("fname").value;
-            engine.startGame({ onProgress: printProgress });
+            var canEl = document.getElementById("canvas")
+            canEl.width  = window.innerWidth;
+            canEl.height = window.innerHeight;
+            engine.startGame({ onProgress: printProgress, canvas: canEl, canvasResizePolicy : 0 });
             ShowGameHideNameSelect()
         }
 
