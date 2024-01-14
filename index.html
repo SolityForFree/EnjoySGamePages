@@ -8,118 +8,137 @@
     <link rel="manifest" href="manifest.json">
 </head>
 <body>
-    <main>
-    <div class="container-fluid vh-100 d-flex justify-content-center align-items-center">
-    <div class="row">
-        <div class="col-md-6 text-center">
-            <div id="createServer">
-                <h1 class="text-light">Welcome to Botanica Erotica!</h1>
-                <h3 id="textPopis" class="text-light"> hoj. Vítej na testovací stránce pro Botanica Erotica (název je VIP). Byl jsi vybrán, protože jsi otevřený člověk
-                    který chápe, že je potřeba se o sexu a sexuálních praktikách bavit mezi partnery.
-                    Návod pro tuto testovací verzi najdete v tomto mém užasném videu :D :
-                    <a href="https://youtu.be/Y_WQDCePddg">YT Tutorial</a>
-                </h3>
-                <br>
-                <button class="btn btn-primary btn-lg mb-3" onclick="CreateServer()" id="startServer">Start Server</button>
-                <button class="btn btn-primary btn-lg" onclick="JoinGame()" id="joinGame">Join Game</button>
-                <button class="btn btn-primary btn-lg" id="install" hidden>Install</button>    
-                <div style="width: 500px" id="reader" hidden></div>
-            </div>
+    <!-- <div class="container vh-100 d-flex justify-content-center position-absolute"> -->
+        <!-- <div id="progress" class="h-100 d-flex position-fixed align-items-center"> -->
+            <!-- <div class="d-flex flex-column"> -->
+                <!-- <h1 class="text-light">Game is loading:</h1> -->
+                <!-- <div class="progress mt-4"> -->
+                    <!-- <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%;" -->
+                        <!-- id="progressBar"></div> -->
+                <!-- </div> -->
+            <!-- </div> -->
+        <!-- </div> -->
 
-            <div id="selectingNameDiv" style="display: none;">
-                <div class="mb-2">
-                    <label for="fname" class="form-label h4 text-light display-1">What is your name?</label>
-                    <input type="text" class="form-control" id="fname" name="fname">
+        <div class="container-fluid vh-100 d-flex justify-content-center align-items-center">
+        
+            <div id="gameDiv" class="position-fixed">
+                <canvas id="canvas" class="d-none"></canvas>
+            </div>
+        
+            <div id="progress" class="h-100 d-flex position-fixed align-items-center">
+            <div class="d-flex flex-column">
+                <h1 class="text-light">Game is loading:</h1>
+                <div class="progress mt-4">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%;"
+                        id="progressBar"></div>
                 </div>
-                <button class="btn btn-primary" onclick="SetNameButton()">Start Game</button>
+            </div>
+            </div>
+        
+            <div id="lobby" class="vh-100 position-fixed d-flex d-none">
+                <div class="h-100 d-flex flex-column">
+                    <div class="h-25 d-flex justify-content-center">
+                        <div class="d-flex flex-column p-2 justify-content-end">
+                            <h3 class="display-2 text-light">Připojení hráči:</h3>
+                        </div>
+                    </div>
+                    <div class="h-25">
+                        <div class="d-flex flex-column">
+                            <div class="text-center" id="listOfNames">
+                             </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="StartGame()">Spustit hru</button>
+                    <div class="h-50 container">
+                        <div class="d-flex flex-column">
+                            <div class="text-center">
+                                <h3 class="display-6 text-light">Nech svého partnera naskenovat tento kód.</h3>
+                                <img id="qrImage" class="img-thumbnail" crossorigin="anonymous" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=asrda"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-    <div id="gameDiv" class="position-fixed" style="display: none;">
-        <!-- <div class="mb-2"> -->
-            <!-- <h1>Share URL with your friend, partner, lover ❤️</h1> -->
-            <!-- <button class="btn btn-secondary" onclick="copyURLToClipboard()">Copy URL</button> -->
-            <!-- <button class="btn btn-secondary" onclick="toggleFullScreen()">Full Screen</button> -->
-        <!-- </div>  -->
-        <canvas id="canvas" hidden>
-        </canvas>
-
-        <div id="progress">
-        <h1 class="text-light">Game is loading:</h1>
-        <div class="progress mt-4">
-            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%;" id="progressBar"></div>
-        </div>
-        </div>  
-        <br>
-    </div>
-    <div class="position-fixed justify-content-center" style="background-color: aqua;">
-        <h1>Lorem ipsum dolor sit amet!</h1>
-        <!-- <h1 id="textOverCanvas" class="display-1 text-light">Text af.</h1> -->
-    </div>
-    </div>
-</main>
     <script src="index.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="html5-qrcode.min.js"></script>
     <script>
-        var engine = new Engine({"args":[],"canvasResizePolicy":1,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":68225792,"index.wasm":17867504},"focusCanvas":true,"gdnativeLibs":[]});
-        var player_name = "nothing123"
-        
+        var engine = new Engine({"args":[],"canvasResizePolicy":1,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":68226144,"index.wasm":17867504},"focusCanvas":true,"gdnativeLibs":[]});
+        var game_started = false
             
-        document.getElementById("selectingNameDiv").style.display = "none";
         var search_params = new URLSearchParams(window.location.search)
-        if (search_params.has("networkGame") && search_params.has("networkGameId"))
+        if (search_params.has("networkGameId"))
         {
-            document.getElementById("createServer").style.display = "none";
-            document.getElementById("selectingNameDiv").style.display = "none";
-            document.getElementById("reader").style.display = "none";
+            var networkGameId = search_params.get("networkGameId")
+            var qrImage = document.getElementById("qrImage")
+            qrImage.setAttribute("src", "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=" + networkGameId)
+
             SetNameButton()
         }
         else{
-            //var html5QrcodeScanner = new Html5QrcodeScanner(
-	        //    "reader", { fps: 10, qrbox: 250 });
-            //html5QrcodeScanner.render(onScanSuccess);
-            // const html5QrCode = new Html5Qrcode("reader");
-            // const config = { fps: 10, qrbox: { width: 250, height: 250 } };
-            // html5QrCode.start({ facingMode: "environment" }, config, onScanSuccess);
+            console.log("Error: Cannot load the IP correctly.")
         }
 
-        function CreateServer()
+        function StartGame()
         {
-            let networkGameId = (Math.random() + 1).toString(36).substring(3);
-            window.location = location.protocol + "//" + location.hostname + window.location.pathname + "?networkGame=true&networkGameId=" + networkGameId
+            console.log("hidden")
+            var lobby = document.getElementById("lobby")
+            lobby.classList.add("d-none")
+
+            var game = document.getElementById("canvas")
+            game.classList.remove("d-none")
         }
 
-        function printProgress(current, total) {
+        function IsStartGamePressed()
+        {
+            console.log("Game started: ", game_started)
+            var game = document.getElementById("canvas")
+        
+            // Check if the game is visible.
+            if(!game.classList.contains("d-none") && !game_started)
+            {
+                game_started = true;
+                return true;
+            }
+            return false;
+        }
+
+        function AddNameToListOfNames(name)
+        {
+             var myDiv = document.getElementById("listOfNames");
+            // Create an h2 element
+            var newH2 = document.createElement('h4');
+            // Set the text content of the h2 element
+            newH2.textContent = name;
+            newH2.setAttribute("class", "display-6 text-light justify-content-center p-2")
+            // Append the h2 element to the div
+            myDiv.appendChild(newH2);
+        }
+
+        function printProgress(current, total) 
+        {
             const progressPercentage = ((current / total) * 100).toFixed(2);
             const progressBar = document.getElementById("progressBar");
             progressBar.style.width = `${progressPercentage}%`;
             progressBar.setAttribute("aria-valuenow", progressPercentage);
             progressBar.innerHTML = `${progressPercentage}% Complete`;
-            if (progressPercentage >= 99.0)
-            {
-                document.getElementById("progress").style.display = "none";
-                // Show the canvas when the game is loaded.
-                console.log("Display canvas.")
-                var canvas = document.getElementById("canvas")
-                canvas.removeAttribute("hidden")
-            }
+        }
+
+        function OnLoadingFinished()
+        {
+                var progress = document.getElementById("progress")
+                progress.classList.add("d-none")
+            
+                var lobby = document.getElementById("lobby")
+                lobby.classList.remove("d-none")
         }
 
         function SetNameButton()
         {
-            player_name = document.getElementById("fname").value;
             var canEl = document.getElementById("canvas")
             canEl.width  = window.innerWidth;
             canEl.height = window.innerHeight;
             engine.startGame({ onProgress: printProgress, canvas: canEl, canvasResizePolicy : 0 });
-            ShowGameHideNameSelect()
-        }
-
-        function ShowGameHideNameSelect()
-        {
-            document.getElementById("selectingNameDiv").style.display = "none";
-            document.getElementById("gameDiv").style.display = "block";
         }
 
         function copyURLToClipboard() 
@@ -137,61 +156,12 @@
             alert("URL copied to clipboard!");
         }
 
-        function toggleFullScreen() {
+        function toggleFullScreen() 
+        {
             const elem = document.getElementById("canvas");
             if (elem.requestFullscreen) {
                 elem.requestFullscreen();
             }
-        }
-
-        let installPrompt = null;
-        const installButton = document.querySelector("#install");
-
-        window.addEventListener("beforeinstallprompt", (event) => {
-            event.preventDefault();
-            installPrompt = event;
-            installButton.removeAttribute("hidden");
-        });
-
-        installButton.addEventListener("click", async () => {
-            if (!installPrompt) {
-                return;
-            }
-            const result = await installPrompt.prompt();
-            console.log(`Install prompt was: ${result.outcome}`);
-            disableInAppInstallPrompt();
-        });
-
-        function disableInAppInstallPrompt() {
-            installPrompt = null;
-            installButton.setAttribute("hidden", "");
-        }
-
-
-
-        function onScanSuccess(decodedText, decodedResult) {
-            // Handle on success condition with the decoded text or result.
-            console.log(`Scan result: ${decodedText}`, decodedResult);
-            window.location = location.protocol + "//" + location.hostname + window.location.pathname + "?networkGame=true&networkGameId=" + decodedText
-        } 
-
-        function JoinGame()
-        {
-            console.log("Hello")
-            let reader = document.getElementById("reader")
-            reader.removeAttribute("hidden");
-            
-            const html5QrCode = new Html5Qrcode("reader");
-            const config = { fps: 10, qrbox: { width: 250, height: 250 } };
-            html5QrCode.start({ facingMode: "environment" }, config, onScanSuccess);
-
-            let joinButton = document.getElementById("joinGame")
-            joinButton.setAttribute("hidden", true)
-
-            let startButton = document.getElementById("startServer")
-            startButton.setAttribute("hidden", true)
-            let textPopis = document.getElementById("textPopis")
-            textPopis.setAttribute("hidden", true)
         }
     </script>
 </body>
@@ -202,8 +172,6 @@
       /* justify-content: center; */
       /* align-items: center; */
       background-color: #000000;
-}
-
-
+    }
 </style>
 </html>
