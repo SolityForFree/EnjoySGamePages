@@ -1,198 +1,249 @@
 <!DOCTYPE html>
-<html>
+<html xmlns='http://www.w3.org/1999/xhtml' lang='' xml:lang=''>
 <head>
-    <title>My Template</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="manifest" href="manifest.json">
+	<meta charset='utf-8' />
+	<meta name='viewport' content='width=device-width, user-scalable=no' />
+	<title>EnjoySGame</title>
+	<style type='text/css'>
+
+		body {
+			touch-action: none;
+			margin: 0;
+			border: 0 none;
+			padding: 0;
+			text-align: center;
+			background-color: black;
+		}
+
+		#canvas {
+			display: block;
+			margin: 0;
+			color: white;
+		}
+
+		#canvas:focus {
+			outline: none;
+		}
+
+		.godot {
+			font-family: 'Noto Sans', 'Droid Sans', Arial, sans-serif;
+			color: #e0e0e0;
+			background-color: #3b3943;
+			background-image: linear-gradient(to bottom, #403e48, #35333c);
+			border: 1px solid #45434e;
+			box-shadow: 0 0 1px 1px #2f2d35;
+		}
+
+
+		/* Status display
+		 * ============== */
+
+		#status {
+			position: absolute;
+			left: 0;
+			top: 0;
+			right: 0;
+			bottom: 0;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			/* don't consume click events - make children visible explicitly */
+			visibility: hidden;
+		}
+
+		#status-progress {
+			width: 366px;
+			height: 7px;
+			background-color: #38363A;
+			border: 1px solid #444246;
+			padding: 1px;
+			box-shadow: 0 0 2px 1px #1B1C22;
+			border-radius: 2px;
+			visibility: visible;
+		}
+
+		@media only screen and (orientation:portrait) {
+			#status-progress {
+				width: 61.8%;
+			}
+		}
+
+		#status-progress-inner {
+			height: 100%;
+			width: 0;
+			box-sizing: border-box;
+			transition: width 0.5s linear;
+			background-color: #202020;
+			border: 1px solid #222223;
+			box-shadow: 0 0 1px 1px #27282E;
+			border-radius: 3px;
+		}
+
+		#status-indeterminate {
+			height: 42px;
+			visibility: visible;
+			position: relative;
+		}
+
+		#status-indeterminate > div {
+			width: 4.5px;
+			height: 0;
+			border-style: solid;
+			border-width: 9px 3px 0 3px;
+			border-color: #2b2b2b transparent transparent transparent;
+			transform-origin: center 21px;
+			position: absolute;
+		}
+
+		#status-indeterminate > div:nth-child(1) { transform: rotate( 22.5deg); }
+		#status-indeterminate > div:nth-child(2) { transform: rotate( 67.5deg); }
+		#status-indeterminate > div:nth-child(3) { transform: rotate(112.5deg); }
+		#status-indeterminate > div:nth-child(4) { transform: rotate(157.5deg); }
+		#status-indeterminate > div:nth-child(5) { transform: rotate(202.5deg); }
+		#status-indeterminate > div:nth-child(6) { transform: rotate(247.5deg); }
+		#status-indeterminate > div:nth-child(7) { transform: rotate(292.5deg); }
+		#status-indeterminate > div:nth-child(8) { transform: rotate(337.5deg); }
+
+		#status-notice {
+			margin: 0 100px;
+			line-height: 1.3;
+			visibility: visible;
+			padding: 4px 6px;
+			visibility: visible;
+		}
+	</style>
+<link id='-gd-engine-icon' rel='icon' type='image/png' href='index.icon.png' />
+<link rel='apple-touch-icon' href='index.apple-touch-icon.png'/>
+<link rel='manifest' href='index.manifest.json'>
+
 </head>
 <body>
-    <!-- <div class="container vh-100 d-flex justify-content-center position-absolute"> -->
-        <!-- <div id="progress" class="h-100 d-flex position-fixed align-items-center"> -->
-            <!-- <div class="d-flex flex-column"> -->
-                <!-- <h1 class="text-light">Game is loading:</h1> -->
-                <!-- <div class="progress mt-4"> -->
-                    <!-- <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%;" -->
-                        <!-- id="progressBar"></div> -->
-                <!-- </div> -->
-            <!-- </div> -->
-        <!-- </div> -->
+	<canvas id='canvas'>
+		HTML5 canvas appears to be unsupported in the current browser.<br />
+		Please try updating or use a different browser.
+	</canvas>
+	<div id='status'>
+		<div id='status-progress' style='display: none;' oncontextmenu='event.preventDefault();'><div id ='status-progress-inner'></div></div>
+		<div id='status-indeterminate' style='display: none;' oncontextmenu='event.preventDefault();'>
+			<div></div>
+			<div></div>
+			<div></div>
+			<div></div>
+			<div></div>
+			<div></div>
+			<div></div>
+			<div></div>
+		</div>
+		<div id='status-notice' class='godot' style='display: none;'></div>
+	</div>
 
-        <div class="container-fluid vh-100 d-flex justify-content-center align-items-center">
-        
-            <div id="gameDiv" class="position-fixed">
-                <canvas id="canvas" class="d-none"></canvas>
-            </div>
-        
-            <div id="progress" class="h-100 d-flex position-fixed align-items-center">
-            <div class="d-flex flex-column">
-                <h1 class="text-light">Game is loading:</h1>
-                <div class="progress mt-4">
-                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%;"
-                        id="progressBar"></div>
-                </div>
-            </div>
-            </div>
-        
-            <div id="lobby" class="vh-100 position-fixed d-flex d-none">
-                <div class="h-100 d-flex flex-column">
-                    <div class="h-25 d-flex justify-content-center">
-                        <div class="d-flex flex-column p-2 justify-content-end">
-                            <h3 class="display-2 text-light">Připojení hráči:</h3>
-                        </div>
-                    </div>
-                    <div class="h-25">
-                        <div class="d-flex flex-column">
-                            <div class="text-center" id="listOfNames">
-                             </div>
-                        </div>
-                    </div>
-                    <button id="startGameButton" class="btn btn-primary d-none" onclick="StartGame()">Spustit hru</button>
-                    <div class="h-50 container">
-                        <div class="d-flex flex-column">
-                            <div class="text-center">
-                                <h3 class="display-6 text-light">Nech svého partnera naskenovat tento kód.</h3>
-                                <img id="qrImage" class="img-thumbnail" crossorigin="anonymous" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=asrda"/>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    <script src="index.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        var engine = new Engine({"args":[],"canvasResizePolicy":1,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":68226016,"index.wasm":17867504},"focusCanvas":true,"gdnativeLibs":[],"serviceWorker":"index.service.worker.js"});
-        var game_started = false
-            
-        //var search_params = new URLSearchParams(window.location.search)
-        //if (search_params.has("networkGameId"))
-        //{
-            var networkGameId = "whasup"//search_params.get("networkGameId")
-            var qrImage = document.getElementById("qrImage")
-            qrImage.setAttribute("src", "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=" + networkGameId)
+	<script type='text/javascript' src='index.js'></script>
+	<script type='text/javascript'>//<![CDATA[
 
-            SetNameButton()
-       // }
-       // else{
-       //     alert("Error: Cannot load the IP correctly.")
-       // }
+		const GODOT_CONFIG = {"args":[],"canvasResizePolicy":1,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":68225664,"index.wasm":17867504},"focusCanvas":true,"gdnativeLibs":[],"serviceWorker":"index.service.worker.js"};
+		var engine = new Engine(GODOT_CONFIG);
 
-        function StartGame()
-        {
-            console.log("hidden")
-            var lobby = document.getElementById("lobby")
-            lobby.classList.add("d-none")
+		(function() {
+			const INDETERMINATE_STATUS_STEP_MS = 100;
+			var statusProgress = document.getElementById('status-progress');
+			var statusProgressInner = document.getElementById('status-progress-inner');
+			var statusIndeterminate = document.getElementById('status-indeterminate');
+			var statusNotice = document.getElementById('status-notice');
 
-            var game = document.getElementById("canvas")
-            game.classList.remove("d-none")
-        }
+			var initializing = true;
+			var statusMode = 'hidden';
 
-        function IsStartGamePressed()
-        {
-            var game = document.getElementById("canvas")
-        
-            // Check if the game is visible.
-            if(!game.classList.contains("d-none") && !game_started)
-            {
-                game_started = true;
-                return true;
-            }
-            return false;
-        }
+			var animationCallbacks = [];
+			function animate(time) {
+				animationCallbacks.forEach(callback => callback(time));
+				requestAnimationFrame(animate);
+			}
+			requestAnimationFrame(animate);
 
-        function AddNameToListOfNames(name)
-        {
-            var myDiv = document.getElementById("listOfNames");
-            // Create an h2 element
-            var newH2 = document.createElement('h4');
-            // Set the text content of the h2 element
-            newH2.textContent = name;
-            newH2.setAttribute("class", "display-6 text-light justify-content-center p-2")
-            // Append the h2 element to the div
-            myDiv.appendChild(newH2);
-        }
-        
-        function ClearListOfNames()
-        {
-            var myDiv = document.getElementById("listOfNames");
-            while (myDiv.firstChild) {
-                // The list is LIVE so it will re-index each call
-                myDiv.removeChild(myDiv.firstChild);
-            }
-        }
+			function setStatusMode(mode) {
 
-        function HideStartGameButton()
-        {
-            console.log("Hide start game button.")
-            var button = document.getElementById("startGameButton");
-            button.classList.add("d-none");
-        }
+				if (statusMode === mode || !initializing)
+					return;
+				[statusProgress, statusIndeterminate, statusNotice].forEach(elem => {
+					elem.style.display = 'none';
+				});
+				animationCallbacks = animationCallbacks.filter(function(value) {
+					return (value != animateStatusIndeterminate);
+				});
+				switch (mode) {
+					case 'progress':
+						statusProgress.style.display = 'block';
+						break;
+					case 'indeterminate':
+						statusIndeterminate.style.display = 'block';
+						animationCallbacks.push(animateStatusIndeterminate);
+						break;
+					case 'notice':
+						statusNotice.style.display = 'block';
+						break;
+					case 'hidden':
+						break;
+					default:
+						throw new Error('Invalid status mode');
+				}
+				statusMode = mode;
+			}
 
-        function ShowStartGameButton()
-        {
-            var button = document.getElementById("startGameButton");
-            button.classList.remove("d-none");
-        }
+			function animateStatusIndeterminate(ms) {
+				var i = Math.floor(ms / INDETERMINATE_STATUS_STEP_MS % 8);
+				if (statusIndeterminate.children[i].style.borderTopColor == '') {
+					Array.prototype.slice.call(statusIndeterminate.children).forEach(child => {
+						child.style.borderTopColor = '';
+					});
+					statusIndeterminate.children[i].style.borderTopColor = '#dfdfdf';
+				}
+			}
 
-        function printProgress(current, total) 
-        {
-            const progressPercentage = ((current / total) * 100).toFixed(2);
-            const progressBar = document.getElementById("progressBar");
-            progressBar.style.width = `${progressPercentage}%`;
-            progressBar.setAttribute("aria-valuenow", progressPercentage);
-            progressBar.innerHTML = `${progressPercentage}% Complete`;
-        }
+			function setStatusNotice(text) {
+				while (statusNotice.lastChild) {
+					statusNotice.removeChild(statusNotice.lastChild);
+				}
+				var lines = text.split('\n');
+				lines.forEach((line) => {
+					statusNotice.appendChild(document.createTextNode(line));
+					statusNotice.appendChild(document.createElement('br'));
+				});
+			};
 
-        function OnLoadingFinished()
-        {
-                var progress = document.getElementById("progress")
-                progress.classList.add("d-none")
-            
-                var lobby = document.getElementById("lobby")
-                lobby.classList.remove("d-none")
-        }
+			function displayFailureNotice(err) {
+				var msg = err.message || err;
+				console.error(msg);
+				setStatusNotice(msg);
+				setStatusMode('notice');
+				initializing = false;
+			};
 
-        function SetNameButton()
-        {
-            var canEl = document.getElementById("canvas")
-            canEl.width  = window.innerWidth;
-            canEl.height = window.innerHeight;
-            engine.startGame({ onProgress: printProgress, canvas: canEl, canvasResizePolicy : 0 });
-        }
-
-        function copyURLToClipboard() 
-        {
-            const urlToCopy = window.location.href;
-            const el = document.createElement("textarea");
-            el.value = urlToCopy;
-            el.setAttribute("readonly", "");
-            el.style.position = "absolute";
-            el.style.left = "-9999px";
-            document.body.appendChild(el);
-            el.select();
-            document.execCommand("copy");
-            document.body.removeChild(el);
-            alert("URL copied to clipboard!");
-        }
-
-        function toggleFullScreen() 
-        {
-            const elem = document.getElementById("canvas");
-            if (elem.requestFullscreen) {
-                elem.requestFullscreen();
-            }
-        }
-    </script>
+			if (!Engine.isWebGLAvailable()) {
+				displayFailureNotice('WebGL not available');
+			} else {
+				setStatusMode('indeterminate');
+				engine.startGame({
+					'onProgress': function (current, total) {
+						if (total > 0) {
+							statusProgressInner.style.width = current/total * 100 + '%';
+							setStatusMode('progress');
+							if (current === total) {
+								// wait for progress bar animation
+								setTimeout(() => {
+									setStatusMode('indeterminate');
+								}, 500);
+							}
+						} else {
+							setStatusMode('indeterminate');
+						}
+					},
+				}).then(() => {
+					setStatusMode('hidden');
+					initializing = false;
+				}, displayFailureNotice);
+			}
+		})();
+	//]]></script>
 </body>
-<style>
-    body {
-      /* min-height: 100vh; */
-      /* display: flex; */
-      /* justify-content: center; */
-      /* align-items: center; */
-      background-color: #000000;
-    }
-</style>
 </html>
+
