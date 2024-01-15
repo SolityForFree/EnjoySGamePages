@@ -48,7 +48,7 @@
                              </div>
                         </div>
                     </div>
-                    <button class="btn btn-primary" onclick="StartGame()">Spustit hru</button>
+                    <button id="startGameButton" class="btn btn-primary d-none" onclick="StartGame()">Spustit hru</button>
                     <div class="h-50 container">
                         <div class="d-flex flex-column">
                             <div class="text-center">
@@ -63,21 +63,21 @@
     <script src="index.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        var engine = new Engine({"args":[],"canvasResizePolicy":1,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":68226176,"index.wasm":17867504},"focusCanvas":true,"gdnativeLibs":[]});
+        var engine = new Engine({"args":[],"canvasResizePolicy":1,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":68226016,"index.wasm":17867504},"focusCanvas":true,"gdnativeLibs":[],"serviceWorker":"index.service.worker.js"});
         var game_started = false
             
-        var search_params = new URLSearchParams(window.location.search)
-        if (search_params.has("networkGameId"))
-        {
-            var networkGameId = search_params.get("networkGameId")
+        //var search_params = new URLSearchParams(window.location.search)
+        //if (search_params.has("networkGameId"))
+        //{
+            var networkGameId = "whasup"//search_params.get("networkGameId")
             var qrImage = document.getElementById("qrImage")
             qrImage.setAttribute("src", "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=" + networkGameId)
 
             SetNameButton()
-        }
-        else{
-            console.log("Error: Cannot load the IP correctly.")
-        }
+       // }
+       // else{
+       //     alert("Error: Cannot load the IP correctly.")
+       // }
 
         function StartGame()
         {
@@ -91,7 +91,6 @@
 
         function IsStartGamePressed()
         {
-            console.log("Game started: ", game_started)
             var game = document.getElementById("canvas")
         
             // Check if the game is visible.
@@ -105,7 +104,7 @@
 
         function AddNameToListOfNames(name)
         {
-             var myDiv = document.getElementById("listOfNames");
+            var myDiv = document.getElementById("listOfNames");
             // Create an h2 element
             var newH2 = document.createElement('h4');
             // Set the text content of the h2 element
@@ -113,6 +112,28 @@
             newH2.setAttribute("class", "display-6 text-light justify-content-center p-2")
             // Append the h2 element to the div
             myDiv.appendChild(newH2);
+        }
+        
+        function ClearListOfNames()
+        {
+            var myDiv = document.getElementById("listOfNames");
+            while (myDiv.firstChild) {
+                // The list is LIVE so it will re-index each call
+                myDiv.removeChild(myDiv.firstChild);
+            }
+        }
+
+        function HideStartGameButton()
+        {
+            console.log("Hide start game button.")
+            var button = document.getElementById("startGameButton");
+            button.classList.add("d-none");
+        }
+
+        function ShowStartGameButton()
+        {
+            var button = document.getElementById("startGameButton");
+            button.classList.remove("d-none");
         }
 
         function printProgress(current, total) 
